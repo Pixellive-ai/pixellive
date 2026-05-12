@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg: #F8F9FC;
+    --bg-secondary: #EDEEF2;
+    --bg-tertiary: #E2E4EB;
+    --fg: #0D0D14;
+    --fg-muted: #4B5563;
+    --neon: #0099AA;
+    --neon-glow: 0 0 12px rgba(0,153,170,0.4);
+    --glass: rgba(0,0,0,0.04);
+    --border-color: rgba(0,0,0,0.10);
+    --muted: #9CA3AF;
+    --card-bg: rgba(255,255,255,0.8);
+  }
+
+  .dark {
+    --bg: #050508;
+    --bg-secondary: #0D0D14;
+    --bg-tertiary: #131320;
+    --fg: #F0F0FF;
+    --fg-muted: #9CA3AF;
+    --neon: #00F0FF;
+    --neon-glow: 0 0 24px rgba(0,240,255,0.4);
+    --glass: rgba(255,255,255,0.04);
+    --border-color: rgba(255,255,255,0.08);
+    --muted: #6B7280;
+    --card-bg: rgba(13,13,20,0.8);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: var(--bg);
+    color: var(--fg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  ::selection {
+    background-color: rgba(0, 240, 255, 0.25);
+    color: var(--fg);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 240, 255, 0.3);
+    border-radius: 3px;
+  }
+}
+
+@layer utilities {
+  .text-neon {
+    color: var(--neon);
+  }
+
+  .border-neon {
+    border-color: var(--neon);
+  }
+
+  .glow-neon {
+    box-shadow: var(--neon-glow);
+  }
+
+  .glass-panel {
+    background: var(--glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-color);
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, var(--fg) 0%, var(--neon) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-neon {
+    background: linear-gradient(90deg, #00F0FF 0%, #7B61FF 50%, #FF61DC 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-grid-pattern {
+    background-image: linear-gradient(var(--border-color) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
