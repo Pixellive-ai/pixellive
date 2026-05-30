@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Moon, Sun, Menu, X, Zap } from 'lucide-react'
+import { Moon, Sun, Menu, X } from 'lucide-react'
 import { useTheme } from '@/components/providers/ThemeProvider'
 import { cn } from '@/lib/utils'
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
   { href: '/services', label: 'Services' },
   { href: '/blog', label: 'Blog' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/about', label: 'About' },
 ]
 
 export function Navbar() {
@@ -36,23 +35,31 @@ export function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
         className={cn(
-          'fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-6xl rounded-2xl transition-all duration-300',
+          'fixed top-4 right-4 z-50 w-auto max-w-[calc(100%-2rem)] rounded-2xl transition-all duration-300',
           scrolled
             ? 'glass-panel shadow-lg shadow-black/20'
             : 'bg-transparent border border-transparent'
         )}
       >
-        <nav className="flex items-center justify-between px-6 py-3">
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-7 h-7 rounded-lg bg-neon/10 border border-neon/40 flex items-center justify-center group-hover:bg-neon/20 transition-colors">
-              <Zap className="w-4 h-4 text-neon" />
-            </div>
-            <span className="font-bold text-lg tracking-tight">
-              PIXEL<span className="text-neon">LIVE</span>
-            </span>
+        <nav className="flex items-center gap-4 px-6 py-3">
+          {/* Mobile-only logo (left) */}
+          <Link to="/" className="md:hidden flex items-center" aria-label="Pixellive home">
+            <img
+              src={theme === 'dark' ? '/pixellive-mark-white.png' : '/pixellive-mark-black.png'}
+              alt="Pixellive"
+              className="h-7 w-auto"
+            />
           </Link>
 
+          {/* Desktop: logo sits immediately to the left of the links */}
           <div className="hidden md:flex items-center gap-1">
+            <Link to="/" className="flex items-center group mr-4" aria-label="Pixellive home">
+              <img
+                src={theme === 'dark' ? '/pixellive-mark-white.png' : '/pixellive-mark-black.png'}
+                alt="Pixellive"
+                className="h-8 w-auto -mt-0.5 group-hover:opacity-80 transition-opacity"
+              />
+            </Link>
             {navLinks.map(link => {
               const active = location.pathname === link.href
               return (
@@ -65,7 +72,7 @@ export function Navbar() {
                   {active && (
                     <motion.span
                       layoutId="nav-pill"
-                      className="absolute inset-0 rounded-lg bg-neon/10 border border-neon/20"
+                      className="absolute inset-0 rounded-lg bg-white border border-[var(--neon)]/30"
                       transition={{ type: 'spring', bounce: 0.2, duration: 0.4 }}
                     />
                   )}
@@ -98,7 +105,7 @@ export function Navbar() {
 
             <Link
               to="/contact"
-              className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-neon/10 border border-neon/40 text-neon hover:bg-neon/20 transition-all hover:shadow-[0_0_16px_rgba(0,240,255,0.3)]"
+              className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-neon/10 border border-neon/40 text-neon hover:bg-neon/20 transition-all hover:shadow-[0_0_16px_rgba(236,28,36,0.35)]"
             >
               Get Started
             </Link>

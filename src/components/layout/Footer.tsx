@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom'
-import { Zap, Twitter, Linkedin, Instagram, Youtube } from 'lucide-react'
+import { Twitter, Linkedin, Instagram, Youtube } from 'lucide-react'
+import { useTheme } from '@/components/providers/ThemeProvider'
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
   { href: '/services', label: 'Services' },
   { href: '/blog', label: 'Blog' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/about', label: 'About' },
 ]
 
 const socials = [
@@ -17,6 +17,7 @@ const socials = [
 ]
 
 export function Footer() {
+  const { theme } = useTheme()
   return (
     <footer className="relative border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-neon/50 to-transparent" />
@@ -25,16 +26,15 @@ export function Footer() {
       <div className="relative max-w-6xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div>
-            <Link to="/" className="flex items-center gap-2 mb-4">
-              <div className="w-7 h-7 rounded-lg bg-neon/10 border border-neon/40 flex items-center justify-center">
-                <Zap className="w-4 h-4 text-neon" />
-              </div>
-              <span className="font-bold text-lg tracking-tight">
-                PIXEL<span className="text-neon">LIVE</span>
-              </span>
+            <Link to="/" className="flex items-center mb-4 group" aria-label="Pixellive home">
+              <img
+                src={theme === 'dark' ? '/pixellive-mark-white.png' : '/pixellive-mark-black.png'}
+                alt="Pixellive"
+                className="h-8 w-auto group-hover:opacity-80 transition-opacity"
+              />
             </Link>
             <p className="text-sm text-[var(--fg-muted)] leading-relaxed max-w-xs">
-              Premium end-to-end digital agency crafting cinematic content, driving search dominance, and building unforgettable brand presence.
+              A new generation of digital agency. Humans for craft. AI for the engine. We handle your entire online presence so you don&apos;t have to think about it.
             </p>
           </div>
 
@@ -74,7 +74,7 @@ export function Footer() {
 
         <div className="mt-12 pt-6 border-t border-[var(--border-color)] flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-[var(--muted)]">
-            © 2024 Pixel Live Production. All rights reserved.
+            © {new Date().getFullYear()} Pixellive Production. All rights reserved.
           </p>
           <p className="text-xs text-[var(--muted)]">
             Crafted with precision. Built for impact.

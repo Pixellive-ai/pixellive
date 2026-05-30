@@ -97,7 +97,7 @@ export default function AdminLogin() {
               disabled={loading || !password}
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 bg-neon text-black hover:bg-neon/90 transition-all hover:shadow-[0_0_24px_rgba(0,240,255,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 bg-neon text-white hover:bg-neon/90 transition-all hover:shadow-[0_0_24px_rgba(0,240,255,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />

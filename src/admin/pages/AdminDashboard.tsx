@@ -30,7 +30,7 @@ export default function AdminDashboard() {
         </div>
         <Link
           to="/admin/blogs/new"
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm bg-neon text-black hover:bg-neon/90 transition-all hover:shadow-[0_0_16px_rgba(0,240,255,0.4)]"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm bg-neon text-white hover:bg-neon/90 transition-all hover:shadow-[0_0_16px_rgba(0,240,255,0.4)]"
         >
           <Plus className="w-4 h-4" /> New Post
         </Link>

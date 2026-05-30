@@ -49,7 +49,7 @@ export default function AdminBlogs() {
         </div>
         <Link
           to="/admin/blogs/new"
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm bg-neon text-black hover:bg-neon/90 transition-all hover:shadow-[0_0_16px_rgba(0,240,255,0.4)]"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm bg-neon text-white hover:bg-neon/90 transition-all hover:shadow-[0_0_16px_rgba(0,240,255,0.4)]"
         >
           <Plus className="w-4 h-4" /> New Post
         </Link>
@@ -72,7 +72,7 @@ export default function AdminBlogs() {
             <button
               key={cat}
               onClick={() => setCategory(cat)}
-              className={`px-3 py-2 rounded-xl text-xs font-medium transition-all ${category === cat ? 'bg-neon text-black' : 'glass-panel border border-[var(--border-color)] text-[var(--fg-muted)] hover:border-neon/30'}`}
+              className={`px-3 py-2 rounded-xl text-xs font-medium transition-all ${category === cat ? 'bg-neon text-white' : 'glass-panel border border-[var(--border-color)] text-[var(--fg-muted)] hover:border-neon/30'}`}
             >
               {cat}
             </button>

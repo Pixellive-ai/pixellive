@@ -13,12 +13,15 @@ import { isConvexConfigured, useSafeMutation } from '@/lib/convex'
 import { api } from '../../convex/_generated/api'
 
 const serviceOptions = [
-  'Video Production',
+  'AI Automation & Lead Generation',
+  'AI Web Development',
   'SEO',
   'SEM & Paid Ads',
+  'Social Media',
+  'Web & App Development',
   'Content Planning',
-  'Growth Analytics',
-  'Full-Service Package',
+  'Video Production',
+  'Not sure / Full-Service Package',
 ]
 
 const socials = [
@@ -101,11 +104,11 @@ export default function Contact() {
           <BlurFadeIn className="text-center mb-12">
             <p className="text-xs uppercase tracking-widest text-neon font-semibold mb-4">Let's Connect</p>
             <h1 className="text-5xl md:text-6xl font-black tracking-tight mb-4">
-              Start your project<br />
-              <span className="text-gradient-neon">today.</span>
+              Tell us about<br />
+              <span className="text-gradient-neon">your project.</span>
             </h1>
-            <p className="text-[var(--fg-muted)] text-lg max-w-md mx-auto">
-              Tell us about your goals. We'll respond with a custom strategy within 24 hours.
+            <p className="text-[var(--fg-muted)] text-lg max-w-lg mx-auto">
+              Drop us a message. Our AI reads every brief, qualifies the fit, and gets back to you with a custom strategy — usually within hours.
             </p>
           </BlurFadeIn>
 
@@ -242,7 +245,7 @@ export default function Contact() {
                       disabled={loading}
                       whileHover={{ scale: 1.01 }}
                       whileTap={{ scale: 0.98 }}
-                      className="w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 bg-neon text-black hover:bg-neon/90 transition-all hover:shadow-[0_0_24px_rgba(0,240,255,0.4)] disabled:opacity-60 disabled:cursor-not-allowed"
+                      className="w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 bg-neon text-white hover:bg-neon/90 transition-all hover:shadow-[0_0_24px_rgba(236,28,36,0.4)] disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       {loading ? (
                         <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
@@ -304,6 +307,21 @@ export default function Contact() {
               </GlassCard>
             </BlurFadeIn>
           </div>
+
+          {/* Secondary: book direct (Cal.com) — for people who already know what they want */}
+          <BlurFadeIn className="text-center mt-12" delay={0.3}>
+            <p className="text-sm text-[var(--fg-muted)]">
+              Already know what you need?{' '}
+              <a
+                href="https://cal.com/pixellive/15min"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-neon font-semibold hover:underline"
+              >
+                Book a 15-min call direct →
+              </a>
+            </p>
+          </BlurFadeIn>
         </div>
       </section>
     </PageTransition>

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Video, Search, Megaphone, FileText, CheckCircle, ArrowRight } from 'lucide-react'
+import { Video, Search, Megaphone, FileText, CheckCircle, ArrowRight, Bot, Share2, Code2, Sparkles } from 'lucide-react'
 import { PageTransition } from '@/components/ui/page-transition'
 import { AuroraBackground } from '@/components/ui/aurora-bg'
 import { TiltCard } from '@/components/ui/tilt-card'
@@ -13,19 +13,34 @@ import { useSEO } from '@/lib/seo'
 
 const services = [
   {
-    icon: Video,
-    title: 'Video Production',
-    desc: 'From concept to final cut, we produce cinematic content that commands attention across every platform.',
+    icon: Bot,
+    title: 'AI Automation & Lead Generation',
+    desc: 'We build and run AI systems that bring you customers — leads found, outreach sent, content posted, results reported. Done-for-you, so you never have to think about it.',
     color: '#00F0FF',
     features: [
-      'Brand films & documentaries',
-      'Social media reels & shorts',
-      'TV & OTT commercials',
-      'Corporate & event coverage',
-      'Motion graphics & animation',
+      'AI lead generation — qualified prospects on autopilot',
+      'Done-for-you outreach & follow-up',
+      'Custom AI agents for your business operations',
+      'A live dashboard of your automation working',
+      'We run it, watch it, fix it, and keep it improving',
     ],
-    deliverables: ['4K / 6K footage', 'Color graded masters', 'Platform-optimized cuts', 'Raw project files'],
-    tools: ['Premiere Pro', 'After Effects', 'DaVinci Resolve', 'Cinema 4D'],
+    deliverables: ['Your own ops dashboard', 'Qualified leads delivered', 'Monthly performance reports', 'Continuous tuning & upgrades'],
+    tools: ['Custom AI Agents', 'LLM Workflows', 'CRM & Email Automation', 'Analytics Dashboards'],
+  },
+  {
+    icon: Sparkles,
+    title: 'AI Web Development',
+    desc: 'Websites and apps with intelligence built in — conversational chat, AI-powered search, personalization engines, and on-page agents that act on your customers’ behalf.',
+    color: '#60A5FA',
+    features: [
+      'Conversational AI / chatbot integration',
+      'AI-powered search & recommendations',
+      'Personalization & dynamic content',
+      'Custom dashboards with live agents',
+      'RAG / knowledge-base setups for internal tools',
+    ],
+    deliverables: ['Production-ready AI app or site', 'Trained prompts & flows', 'Live agent dashboard', 'API & data integrations'],
+    tools: ['OpenAI / Anthropic APIs', 'Vector Databases', 'Vercel AI SDK', 'Custom Agents'],
   },
   {
     icon: Search,
@@ -58,6 +73,36 @@ const services = [
     tools: ['Google Ads', 'Meta Ads Manager', 'Triple Whale', 'Northbeam'],
   },
   {
+    icon: Share2,
+    title: 'Social Media Management',
+    desc: 'An always-on social presence — we plan, create, post, and engage across your channels, then report what is actually working.',
+    color: '#FF8A3D',
+    features: [
+      'Content calendar & consistent posting',
+      'On-brand graphics & captions',
+      'Community engagement & replies',
+      'Instagram, LinkedIn & more',
+      'Monthly growth & reach reporting',
+    ],
+    deliverables: ['Monthly content calendar', 'Branded post creatives', 'Engagement summary', 'Growth & reach reports'],
+    tools: ['Meta Business Suite', 'Buffer', 'Canva', 'AI-Assisted Drafting'],
+  },
+  {
+    icon: Code2,
+    title: 'Web & App Development',
+    desc: 'Fast, beautiful, conversion-focused websites and apps — built on a modern stack and ready to scale with you.',
+    color: '#3DD68C',
+    features: [
+      'Marketing websites & landing pages',
+      'Web & mobile applications',
+      'Brand & visual identity',
+      'Conversion-rate optimization',
+      'Ongoing maintenance & updates',
+    ],
+    deliverables: ['Production-ready site or app', 'Source code & handover', 'Brand & design system', 'Maintenance plan'],
+    tools: ['React', 'Next.js', 'TypeScript', 'Tailwind'],
+  },
+  {
     icon: FileText,
     title: 'Content Planning',
     desc: 'Strategic content ecosystems that nurture audiences, build authority, and drive conversions.',
@@ -71,6 +116,21 @@ const services = [
     ],
     deliverables: ['90-day content calendar', 'Brand voice guide', 'Template library', 'Monthly analytics recap'],
     tools: ['Notion', 'Airtable', 'HubSpot', 'Jasper'],
+  },
+  {
+    icon: Video,
+    title: 'Video Production',
+    desc: 'The creative-quality layer. Cinematographer-led production so your brand never looks like everyone else — from concept to final cut.',
+    color: '#A78BFA',
+    features: [
+      'Brand films & documentaries',
+      'Social media reels & shorts',
+      'TV & OTT commercials',
+      'Corporate & event coverage',
+      'Motion graphics & animation',
+    ],
+    deliverables: ['4K / 6K footage', 'Color graded masters', 'Platform-optimized cuts', 'Raw project files'],
+    tools: ['Premiere Pro', 'After Effects', 'DaVinci Resolve', 'Cinema 4D'],
   },
 ]
 
@@ -119,7 +179,7 @@ export default function Services() {
                         >
                           <svc.icon className="w-7 h-7" style={{ color: svc.color }} />
                         </div>
-                        <h2 className="text-3xl font-black mb-4">{svc.title}</h2>
+                        <h3 className="text-3xl font-bold mb-4">{svc.title}</h3>
                         <AnimatedBeam className="mb-4" />
                         <p className="text-[var(--fg-muted)] leading-relaxed">{svc.desc}</p>
                       </div>

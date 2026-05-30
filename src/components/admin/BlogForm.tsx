@@ -388,7 +388,7 @@ export function BlogForm({ initialData, onClose, onSuccess }: BlogFormProps) {
             </button>
             <button
               type="submit"
-              className="px-8 py-2 bg-neon text-black font-semibold rounded-lg hover:bg-neon/90 transition-all flex items-center gap-2"
+              className="px-8 py-2 bg-neon text-white font-semibold rounded-lg hover:bg-neon/90 transition-all flex items-center gap-2"
             >
               <Save className="w-4 h-4" />
               Save Post

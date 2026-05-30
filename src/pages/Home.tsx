@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import {
-  Video, Search, Megaphone, FileText, TrendingUp,
+  Search, Megaphone, Bot, Share2, Code2, Sparkles, FileText, Video,
   ChevronDown, ArrowRight, Star, Play,
 } from 'lucide-react'
 import { PageTransition } from '@/components/ui/page-transition'
@@ -10,6 +10,7 @@ import { ParticleField } from '@/components/ui/particle-field'
 import { AuroraBackground } from '@/components/ui/aurora-bg'
 import { BackgroundBeams } from '@/components/ui/bg-beams'
 import { TextGenerateEffect } from '@/components/ui/text-generate'
+import CodeAscii from '@/components/CodeAscii'
 import { BentoGrid, BentoCell } from '@/components/ui/bento-grid'
 import { SpotlightCard } from '@/components/ui/spotlight-card'
 import { BorderBeam } from '@/components/ui/border-beam'
@@ -23,12 +24,20 @@ import { useSEO } from '@/lib/seo'
 
 const services = [
   {
-    icon: Video,
-    title: 'Video Production',
-    desc: 'Cinematic brand films, reels, and campaigns that stop the scroll.',
-    tag: 'Creative',
+    icon: Bot,
+    title: 'AI Automation & Lead Generation',
+    desc: 'We build and run AI systems that bring you customers — leads, content, and reporting handled end-to-end. Done-for-you.',
+    tag: 'AI Ops',
     colSpan: 2 as const,
     color: '#00F0FF',
+  },
+  {
+    icon: Sparkles,
+    title: 'AI Web Development',
+    desc: 'Websites and apps with AI built in — chat, search, personalization, on-page agents.',
+    tag: 'AI Web',
+    colSpan: 1 as const,
+    color: '#60A5FA',
   },
   {
     icon: Search,
@@ -47,20 +56,36 @@ const services = [
     color: '#FF61DC',
   },
   {
+    icon: Share2,
+    title: 'Social Media',
+    desc: 'Always-on content, posting, and engagement across your channels.',
+    tag: 'Social',
+    colSpan: 1 as const,
+    color: '#FF8A3D',
+  },
+  {
+    icon: Code2,
+    title: 'Web & App Development',
+    desc: 'Fast, conversion-focused websites and apps, built to scale.',
+    tag: 'Build',
+    colSpan: 1 as const,
+    color: '#3DD68C',
+  },
+  {
     icon: FileText,
     title: 'Content Planning',
-    desc: 'Strategic editorial calendars and content systems.',
+    desc: 'Editorial calendars, blog content, and systems that build brand authority.',
     tag: 'Strategy',
     colSpan: 1 as const,
     color: '#FFB800',
   },
   {
-    icon: TrendingUp,
-    title: 'Growth Analytics',
-    desc: 'Full-funnel dashboards and conversion rate optimization.',
-    tag: 'Analytics',
+    icon: Video,
+    title: 'Video Production',
+    desc: 'Cinema-grade brand films, reels, and campaign creative.',
+    tag: 'Creative',
     colSpan: 1 as const,
-    color: '#00FF94',
+    color: '#A78BFA',
   },
 ]
 
@@ -116,7 +141,7 @@ const testimonials = [
 ]
 
 export default function Home() {
-  useSEO('Home', 'Premium end-to-end digital agency — Video Production, SEO, SEM, Ads & Content.')
+  useSEO('Home', 'AI-powered digital agency — AI automation & lead generation, SEO, paid ads, social, and web development. Done-for-you.')
   const heroRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
 
@@ -151,10 +176,10 @@ export default function Home() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel border border-neon/20 text-xs font-semibold text-neon uppercase tracking-widest mb-8"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[var(--neon)]/30 text-xs font-semibold text-neon uppercase tracking-widest mb-8"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-neon animate-pulse" />
-            Premium Digital Agency
+            AI-Powered Digital Agency
           </motion.div>
 
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-[0.9] tracking-tight mb-6">
@@ -172,8 +197,8 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 1.6 }}
             className="text-lg md:text-xl text-[var(--fg-muted)] max-w-2xl mx-auto mb-10 leading-relaxed"
           >
-            End-to-end digital production — from cinematic video to search dominance.
-            We craft the strategies that scale brands.
+            We handle your entire online presence — leads, content, ads, and automation —
+            so you don't have to think about it. AI-powered, done-for-you.
           </motion.p>
 
           <motion.div
@@ -184,7 +209,7 @@ export default function Home() {
           >
             <Link
               to="/services"
-              className="group flex items-center gap-2 px-8 py-4 rounded-2xl font-semibold bg-neon text-black hover:bg-neon/90 transition-all hover:shadow-[0_0_32px_rgba(0,240,255,0.5)] hover:-translate-y-0.5"
+              className="group flex items-center gap-2 px-8 py-4 rounded-2xl font-semibold bg-neon text-white hover:bg-neon/90 transition-all hover:shadow-[0_0_32px_rgba(236,28,36,0.5)] hover:-translate-y-0.5"
             >
               View Our Work
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -209,8 +234,17 @@ export default function Home() {
       </section>
 
       {/* Mission Control */}
-      <section className="relative py-24 px-6">
-        <div className="max-w-6xl mx-auto">
+      <section className="relative py-24 px-6 overflow-hidden">
+        {/* Animation runs full-width behind */}
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <CodeAscii fillParent />
+        </div>
+        {/* Shield carves out the content column so the animation only shows in side margins */}
+        <div
+          className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-full max-w-6xl pointer-events-none z-[1]"
+          style={{ backgroundColor: 'var(--bg)' }}
+        />
+        <div className="max-w-6xl mx-auto relative z-10">
           <BlurFadeIn className="text-center mb-16">
             <p className="text-xs uppercase tracking-widest text-neon font-semibold mb-3">Mission Control</p>
             <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">
@@ -218,39 +252,46 @@ export default function Home() {
               <span className="text-gradient">in one command center.</span>
             </h2>
             <p className="text-[var(--fg-muted)] max-w-xl mx-auto">
-              From viral video campaigns to search engine dominance — we handle every lever of digital growth.
+              From AI lead generation to done-for-you content and ads — we run every lever of your digital growth.
             </p>
           </BlurFadeIn>
 
           <BentoGrid>
             {services.map((svc, i) => (
               <BentoCell key={svc.title} colSpan={svc.colSpan}>
-                <BlurFadeIn delay={i * 0.08}>
-                  <SpotlightCard className="h-full group">
-                    <div className="relative h-full glass-panel rounded-2xl p-6 overflow-hidden min-h-[200px] flex flex-col justify-between border border-[var(--border-color)] hover:border-neon/20 transition-colors">
-                      <BorderBeam colorFrom={svc.color} />
-                      <div>
-                        <div
-                          className="w-11 h-11 rounded-xl flex items-center justify-center mb-4"
-                          style={{ background: `${svc.color}15`, border: `1px solid ${svc.color}30` }}
-                        >
-                          <svc.icon className="w-5 h-5" style={{ color: svc.color }} />
-                        </div>
-                        <h3 className="text-xl font-bold mb-2">{svc.title}</h3>
-                        <p className="text-sm text-[var(--fg-muted)] leading-relaxed">{svc.desc}</p>
-                      </div>
-                      <span
-                        className="mt-4 self-start text-xs font-semibold px-3 py-1 rounded-full"
+                <BlurFadeIn delay={i * 0.08} className="h-full">
+                  <TiltCard intensity={8} className="h-full">
+                    <SpotlightCard className="h-full group">
+                      <div
+                        className="relative h-full rounded-2xl p-6 overflow-hidden min-h-[200px] flex flex-col justify-between border transition-colors"
                         style={{
-                          background: `${svc.color}15`,
-                          color: svc.color,
-                          border: `1px solid ${svc.color}30`,
+                          background: `linear-gradient(135deg, ${svc.color}10 0%, transparent 60%), var(--glass)`,
+                          borderColor: `${svc.color}40`,
                         }}
                       >
-                        {svc.tag}
-                      </span>
-                    </div>
-                  </SpotlightCard>
+                        <div>
+                          <div
+                            className="w-11 h-11 rounded-xl flex items-center justify-center mb-4"
+                            style={{ background: `${svc.color}15`, border: `1px solid ${svc.color}30` }}
+                          >
+                            <svc.icon className="w-5 h-5" style={{ color: svc.color }} />
+                          </div>
+                          <h3 className="text-xl font-bold mb-2">{svc.title}</h3>
+                          <p className="text-sm text-[var(--fg-muted)] leading-relaxed">{svc.desc}</p>
+                        </div>
+                        <span
+                          className="mt-4 self-start text-xs font-semibold px-3 py-1 rounded-full"
+                          style={{
+                            background: `${svc.color}15`,
+                            color: svc.color,
+                            border: `1px solid ${svc.color}30`,
+                          }}
+                        >
+                          {svc.tag}
+                        </span>
+                      </div>
+                    </SpotlightCard>
+                  </TiltCard>
                 </BlurFadeIn>
               </BentoCell>
             ))}
@@ -385,7 +426,7 @@ export default function Home() {
             </p>
             <Link
               to="/contact"
-              className="inline-flex items-center gap-2 px-10 py-4 rounded-2xl font-bold bg-neon text-black hover:bg-neon/90 transition-all hover:shadow-[0_0_40px_rgba(0,240,255,0.5)] hover:-translate-y-1 text-lg"
+              className="inline-flex items-center gap-2 px-10 py-4 rounded-2xl font-bold bg-neon text-white hover:bg-neon/90 transition-all hover:shadow-[0_0_40px_rgba(236,28,36,0.5)] hover:-translate-y-1 text-lg"
             >
               Start Your Project
               <ArrowRight className="w-5 h-5" />

@@ -9,8 +9,9 @@ export default {
         display: ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
-        neon: '#00F0FF',
-        'neon-dim': '#0099AA',
+        neon: '#EC1C24',
+        'neon-dim': '#B0161D',
+        cyan: '#00F0FF',
       },
       animation: {
         marquee: 'marquee 30s linear infinite',

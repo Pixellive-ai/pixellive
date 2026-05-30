@@ -28,8 +28,8 @@ export function TextGenerateEffect({ text, className, delay = 0 }: TextGenerateE
       {words.map((word, i) => (
         <motion.span
           key={i}
-          initial={{ opacity: 0, filter: 'blur(8px)', y: 8 }}
-          animate={show ? { opacity: 1, filter: 'blur(0px)', y: 0 } : {}}
+          initial={{ opacity: 0, y: 8 }}
+          animate={show ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.4, delay: i * 0.06, ease: 'easeOut' }}
           className="inline-block mr-[0.28em]"
         >

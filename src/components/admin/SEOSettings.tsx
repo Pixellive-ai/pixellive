@@ -37,7 +37,7 @@ export function SEOSettings() {
         <button
           onClick={handleSave}
           disabled={isSaving}
-          className="px-6 py-2 bg-neon text-black font-semibold rounded-lg hover:bg-neon/90 transition-all flex items-center gap-2 disabled:opacity-50"
+          className="px-6 py-2 bg-neon text-white font-semibold rounded-lg hover:bg-neon/90 transition-all flex items-center gap-2 disabled:opacity-50"
         >
           <Save className="w-4 h-4" />
           {isSaving ? 'Saving...' : 'Save All Changes'}
