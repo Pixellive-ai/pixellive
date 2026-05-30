@@ -9,8 +9,6 @@ import { GlassCard } from '@/components/ui/glass-card'
 import { BlurFadeIn } from '@/components/ui/blur-fade'
 import { OrbitingCircles, OrbitRing } from '@/components/ui/orbiting-circles'
 import { useSEO } from '@/lib/seo'
-import { isConvexConfigured, useSafeMutation } from '@/lib/convex'
-import { api } from '../../convex/_generated/api'
 
 const serviceOptions = [
   'AI Automation & Lead Generation',
@@ -32,10 +30,7 @@ const socials = [
 ]
 
 export default function Contact() {
-  useSEO('Contact Us', 'Get in touch with Pixel Live Production. Start your digital project today.')
-
-  const submitContact = useSafeMutation(api.contact.submit)
-  const subscribeNewsletter = useSafeMutation(api.newsletter.subscribe)
+  useSEO('Contact Us', 'Tell us about your project. Our AI reads every brief and gets back to you with a custom strategy.')
 
   const [form, setForm] = useState({
     name: '',
@@ -57,28 +52,29 @@ export default function Contact() {
 
     setLoading(true)
     try {
-      if (isConvexConfigured) {
-        await submitContact({
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
           name: form.name,
           email: form.email,
           company: form.company || undefined,
-          serviceInterest: form.service || undefined,
+          service: form.service || undefined,
           message: form.message,
-        })
+          newsletter: form.newsletter,
+        }),
+      })
 
-        if (form.newsletter) {
-          await subscribeNewsletter({ email: form.email })
-        }
-      } else {
-        // Simulate submission when Convex isn't connected yet
-        await new Promise(r => setTimeout(r, 1000))
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || `Server error (${res.status})`)
       }
 
       setSent(true)
       toast.success("Message sent! We'll be in touch within 24 hours.")
     } catch (err) {
       console.error('Contact submission failed:', err)
-      toast.error('Something went wrong. Please try again or email us directly.')
+      toast.error(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -139,17 +135,6 @@ export default function Contact() {
                   </motion.div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-5">
-                    {!isConvexConfigured && (
-                      <div className="p-3 rounded-xl border border-yellow-500/20 bg-yellow-500/5 text-xs text-yellow-400 flex items-start gap-2">
-                        <span className="shrink-0 mt-0.5">⚠</span>
-                        <span>
-                          Convex not connected — form will simulate submission.{' '}
-                          Add <code className="bg-yellow-500/10 px-1 rounded">VITE_CONVEX_URL</code> to <code className="bg-yellow-500/10 px-1 rounded">.env.local</code> and run{' '}
-                          <code className="bg-yellow-500/10 px-1 rounded">npx convex dev</code> to enable real saves.
-                        </span>
-                      </div>
-                    )}
-
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs font-semibold text-[var(--fg-muted)] mb-1.5 uppercase tracking-wider">
