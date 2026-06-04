@@ -4,6 +4,7 @@ import { AnimatePresence } from 'framer-motion'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { Toaster } from 'sonner'
+import ChatWidget from '@/components/ChatWidget'
 
 const Home = lazy(() => import('@/pages/Home'))
 const About = lazy(() => import('@/pages/About'))
@@ -56,6 +57,7 @@ export default function App() {
         </AnimatePresence>
       </main>
       {!isAdminRoute && <Footer />}
+      {!isAdminRoute && <ChatWidget />}
     </div>
   )
 }
