@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react'
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { MessageCircle, X, Send } from 'lucide-react'
+import { MessageCircle, X, Send, ArrowRight } from 'lucide-react'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 type Role = 'user' | 'assistant'
@@ -10,20 +11,23 @@ interface ChatMessage {
   content: string
 }
 
-type LeadState = 'idle' | 'prompted' | 'submitting' | 'sent'
-
 const GREETING: ChatMessage = {
   role: 'assistant',
-  content:
-    "Hey, I'm Pixellive's assistant. Ask me anything — services, how we work, what an AI automation layer looks like for your business. I'll keep it short.",
+  content: "Hey, I'm Pixel, your AI assistant. Which service are you interested in?",
 }
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-// Same shape, unanchored — finds an email anywhere inside a chat message.
+// The discovery agent emits this on its own last line when it has understood
+// the visitor's need. We strip it from the visible reply and surface the
+// "continue on the form" handoff instead.
+const HANDOFF_MARKER = '[[HANDOFF]]'
+
+// Finds an email anywhere inside a chat message — we never ASK for it in chat,
+// but if the visitor volunteers one we carry it over to prefill the form.
 const EMAIL_FIND = /[^\s@]+@[^\s@]+\.[^\s@]+/
 
-// Only offer follow-up when the visitor actually signals buying intent —
-// we don't knock on doors. If they want us, they'll say something like this.
+// Fallback handoff trigger: if the model never emits the marker but the visitor
+// clearly signals intent, we still offer the form. We don't knock on doors —
+// they have to say something like this first.
 const INTEREST_RE =
   /\b(pric(e|ing)|cost|quote|budget|hire|work with|get started|sign ?up|onboard|interested|reach out|follow up|contact|how do (we|i) start|can you (build|help|do)|need (a|some|help)|looking for)\b/i
 
@@ -31,23 +35,41 @@ function signalsInterest(messages: ChatMessage[]): boolean {
   return messages.some(m => m.role === 'user' && INTEREST_RE.test(m.content))
 }
 
+function stripHandoff(text: string): { clean: string; handoff: boolean } {
+  if (!text.includes(HANDOFF_MARKER)) return { clean: text, handoff: false }
+  const clean = text.split(HANDOFF_MARKER).join('').trim()
+  return { clean, handoff: true }
+}
+
+function findEmail(messages: ChatMessage[]): string {
+  for (const m of messages) {
+    if (m.role !== 'user') continue
+    const hit = m.content.match(EMAIL_FIND)?.[0]
+    if (hit) return hit.trim().toLowerCase()
+  }
+  return ''
+}
+
+// Turn the conversation into a readable brief for the form's message box.
+function buildBrief(messages: ChatMessage[]): string {
+  const lines = messages
+    .filter(m => m.content.trim())
+    .map(m => `${m.role === 'user' ? 'You' : 'Pixel'}: ${m.content.replace(/\s+/g, ' ').trim()}`)
+  return ['From my chat with Pixel:', ...lines].join('\n')
+}
+
 export default function ChatWidget() {
   const reducedMotion = useReducedMotion()
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<ChatMessage[]>([GREETING])
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
   const [chatError, setChatError] = useState<string | null>(null)
-
-  const [leadState, setLeadState] = useState<LeadState>('idle')
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [emailError, setEmailError] = useState<string | null>(null)
+  const [handoffReady, setHandoffReady] = useState(false)
 
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
-  // Guards against double-capturing the same lead (chat-detected + form).
-  const leadSentRef = useRef(false)
 
   const userExchanges = messages.filter(m => m.role === 'user').length
 
@@ -55,19 +77,19 @@ export default function ChatWidget() {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
-  }, [messages, sending, leadState])
+  }, [messages, sending, handoffReady])
 
   useEffect(() => {
     if (open && inputRef.current) inputRef.current.focus()
   }, [open])
 
   useEffect(() => {
-    // Prompt for follow-up only after a real exchange AND a genuine interest
-    // signal — never just because they sent a couple of messages.
-    if (leadState === 'idle' && userExchanges >= 1 && signalsInterest(messages)) {
-      setLeadState('prompted')
+    // Fallback: surface the form if the visitor clearly signals intent even
+    // when the model didn't emit the handoff marker.
+    if (!handoffReady && userExchanges >= 2 && signalsInterest(messages)) {
+      setHandoffReady(true)
     }
-  }, [messages, userExchanges, leadState])
+  }, [messages, userExchanges, handoffReady])
 
   useEffect(() => {
     if (!open) return
@@ -78,43 +100,14 @@ export default function ChatWidget() {
     return () => window.removeEventListener('keydown', onKey)
   }, [open])
 
-  // Single source of truth for pushing a lead into the contact pipeline.
-  // Used by both the structured form and chat-message email detection.
-  async function postLead(rawEmail: string, convo: ChatMessage[]): Promise<boolean> {
-    const emailAddr = rawEmail.trim().toLowerCase()
-    if (!EMAIL_RE.test(emailAddr) || leadSentRef.current) return leadSentRef.current
-    leadSentRef.current = true
-
-    const transcript = convo
-      .filter(m => m.role === 'user' && !EMAIL_FIND.test(m.content))
-      .slice(-5)
-      .map(m => `• ${m.content}`)
-      .join('\n')
-
-    try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          name: name.trim() || 'Chat visitor',
-          email: emailAddr,
-          message:
-            transcript ||
-            'Visitor shared their email via the chatbot (no other transcript).',
-          service: 'Chatbot',
-          newsletter: false,
-          source: 'chatbot',
-        }),
-      })
-      if (!res.ok) {
-        const data = (await res.json().catch(() => ({}))) as { error?: string }
-        throw new Error(data.error || `Server error (${res.status})`)
-      }
-      return true
-    } catch (err) {
-      leadSentRef.current = false
-      throw err
-    }
+  function goToForm() {
+    const params = new URLSearchParams()
+    const email = findEmail(messages)
+    if (email) params.set('email', email)
+    params.set('message', buildBrief(messages))
+    params.set('source', 'chatbot')
+    navigate(`/contact?${params.toString()}`)
+    setOpen(false)
   }
 
   async function send() {
@@ -131,17 +124,6 @@ export default function ChatWidget() {
     setChatError(null)
     setSending(true)
 
-    // If the visitor just typed an email straight into chat (the way people
-    // actually respond when asked), capture it — don't rely on the form.
-    const foundEmail = trimmed.match(EMAIL_FIND)?.[0]
-    if (foundEmail && !leadSentRef.current) {
-      void postLead(foundEmail, next)
-        .then(() => setLeadState('sent'))
-        .catch(() => {
-          /* best-effort; the LLM reply still goes through */
-        })
-    }
-
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
@@ -153,9 +135,11 @@ export default function ChatWidget() {
         throw new Error(data.error || `Server error (${res.status})`)
       }
       const data = (await res.json()) as { reply?: string }
-      const reply = data.reply?.trim()
-      if (!reply) throw new Error('Empty response.')
-      setMessages(m => [...m, { role: 'assistant', content: reply }])
+      const raw = data.reply?.trim()
+      if (!raw) throw new Error('Empty response.')
+      const { clean, handoff } = stripHandoff(raw)
+      setMessages(m => [...m, { role: 'assistant', content: clean || "Got it — let's take this to the form." }])
+      if (handoff) setHandoffReady(true)
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Something went wrong.'
       setChatError(msg)
@@ -176,32 +160,6 @@ export default function ChatWidget() {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       void send()
-    }
-  }
-
-  async function submitLead(e: FormEvent) {
-    e.preventDefault()
-    const trimmed = email.trim().toLowerCase()
-    if (!EMAIL_RE.test(trimmed)) {
-      setEmailError('That email looks off — mind double-checking?')
-      return
-    }
-    setEmailError(null)
-    setLeadState('submitting')
-
-    try {
-      await postLead(trimmed, messages)
-      setLeadState('sent')
-      setMessages(m => [
-        ...m,
-        {
-          role: 'assistant',
-          content: "Got it — we'll be in touch soon. Anything else I can answer in the meantime?",
-        },
-      ])
-    } catch (err) {
-      setEmailError(err instanceof Error ? err.message : 'Could not save that — try again?')
-      setLeadState('prompted')
     }
   }
 
@@ -266,7 +224,7 @@ export default function ChatWidget() {
                 <MessageCircle className="w-4 h-4" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold leading-tight">Pixellive</p>
+                <p className="text-sm font-bold leading-tight">Pixel</p>
                 <p className="text-[11px] text-[var(--fg-muted)] leading-tight">Usually replies instantly</p>
               </div>
               <button
@@ -310,53 +268,17 @@ export default function ChatWidget() {
                 </div>
               )}
 
-              {(leadState === 'prompted' || leadState === 'submitting') && (
+              {handoffReady && (
                 <div className="rounded-xl border border-neon/30 bg-neon/5 p-3 mt-1">
                   <p className="text-xs text-[var(--fg)] mb-2">
-                    Want the team to follow up? Drop your email — no spam, no nag.
+                    Perfect — the team can take it from here. I'll carry this chat over so you don't repeat yourself.
                   </p>
-                  <form onSubmit={submitLead} className="space-y-2">
-                    <input
-                      type="text"
-                      autoComplete="name"
-                      value={name}
-                      onChange={e => setName(e.target.value)}
-                      placeholder="Your name (optional)"
-                      aria-label="Your name"
-                      className="w-full min-w-0 px-3 py-2 rounded-lg text-sm bg-[var(--bg)] border border-[var(--border-color)] focus:outline-none focus:border-neon/60 focus:ring-1 focus:ring-neon/30 text-[var(--fg)] placeholder:text-[var(--muted)]"
-                      disabled={leadState === 'submitting'}
-                    />
-                    <div className="flex gap-2">
-                      <input
-                        type="email"
-                        inputMode="email"
-                        autoComplete="email"
-                        required
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        placeholder="you@company.com"
-                        aria-label="Your email"
-                        className="flex-1 min-w-0 px-3 py-2 rounded-lg text-sm bg-[var(--bg)] border border-[var(--border-color)] focus:outline-none focus:border-neon/60 focus:ring-1 focus:ring-neon/30 text-[var(--fg)] placeholder:text-[var(--muted)]"
-                        disabled={leadState === 'submitting'}
-                      />
-                      <button
-                        type="submit"
-                        disabled={leadState === 'submitting'}
-                        className="px-3 py-2 rounded-lg text-xs font-bold bg-neon text-white hover:bg-neon/90 transition-colors disabled:opacity-60"
-                      >
-                        {leadState === 'submitting' ? '…' : 'Send'}
-                      </button>
-                    </div>
-                  </form>
-                  {emailError && (
-                    <p className="text-[11px] text-neon mt-2">{emailError}</p>
-                  )}
                   <button
                     type="button"
-                    onClick={() => setLeadState('sent')}
-                    className="text-[11px] text-[var(--fg-muted)] hover:text-[var(--fg)] mt-2"
+                    onClick={goToForm}
+                    className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-sm font-bold bg-neon text-white hover:bg-neon/90 transition-colors"
                   >
-                    Not now
+                    Continue on our quick form <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               )}
@@ -375,7 +297,7 @@ export default function ChatWidget() {
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={onInputKeyDown}
-                placeholder="Ask about services, automation, scope…"
+                placeholder="Tell me what you're looking for…"
                 aria-label="Message"
                 maxLength={2000}
                 className="flex-1 min-w-0 px-3 py-2 rounded-lg text-sm bg-[var(--glass)] border border-[var(--border-color)] focus:outline-none focus:border-neon/60 focus:ring-1 focus:ring-neon/30 text-[var(--fg)] placeholder:text-[var(--muted)]"

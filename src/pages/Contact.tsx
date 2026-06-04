@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Send, Video, Search, Megaphone, Twitter, Linkedin, Instagram, Youtube, CheckCircle2 } from 'lucide-react'
 import { toast } from 'sonner'
@@ -32,14 +33,15 @@ const socials = [
 export default function Contact() {
   useSEO('Contact Us', 'Tell us about your project. Our AI reads every brief and gets back to you with a custom strategy.')
 
-  const [form, setForm] = useState({
-    name: '',
-    email: '',
+  const [searchParams] = useSearchParams()
+  const [form, setForm] = useState(() => ({
+    name: searchParams.get('name') ?? '',
+    email: searchParams.get('email') ?? '',
     company: '',
-    service: '',
-    message: '',
+    service: searchParams.get('service') ?? '',
+    message: searchParams.get('message') ?? '',
     newsletter: false,
-  })
+  }))
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
 
@@ -62,6 +64,7 @@ export default function Contact() {
           service: form.service || undefined,
           message: form.message,
           newsletter: form.newsletter,
+          source: searchParams.get('source') || undefined,
         }),
       })
 
