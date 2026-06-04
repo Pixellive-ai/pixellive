@@ -19,6 +19,8 @@ const GREETING: ChatMessage = {
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+// Same shape, unanchored — finds an email anywhere inside a chat message.
+const EMAIL_FIND = /[^\s@]+@[^\s@]+\.[^\s@]+/
 
 // Only offer follow-up when the visitor actually signals buying intent —
 // we don't knock on doors. If they want us, they'll say something like this.
@@ -44,6 +46,8 @@ export default function ChatWidget() {
 
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
+  // Guards against double-capturing the same lead (chat-detected + form).
+  const leadSentRef = useRef(false)
 
   const userExchanges = messages.filter(m => m.role === 'user').length
 
@@ -74,6 +78,45 @@ export default function ChatWidget() {
     return () => window.removeEventListener('keydown', onKey)
   }, [open])
 
+  // Single source of truth for pushing a lead into the contact pipeline.
+  // Used by both the structured form and chat-message email detection.
+  async function postLead(rawEmail: string, convo: ChatMessage[]): Promise<boolean> {
+    const emailAddr = rawEmail.trim().toLowerCase()
+    if (!EMAIL_RE.test(emailAddr) || leadSentRef.current) return leadSentRef.current
+    leadSentRef.current = true
+
+    const transcript = convo
+      .filter(m => m.role === 'user' && !EMAIL_FIND.test(m.content))
+      .slice(-5)
+      .map(m => `• ${m.content}`)
+      .join('\n')
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          name: name.trim() || 'Chat visitor',
+          email: emailAddr,
+          message:
+            transcript ||
+            'Visitor shared their email via the chatbot (no other transcript).',
+          service: 'Chatbot',
+          newsletter: false,
+          source: 'chatbot',
+        }),
+      })
+      if (!res.ok) {
+        const data = (await res.json().catch(() => ({}))) as { error?: string }
+        throw new Error(data.error || `Server error (${res.status})`)
+      }
+      return true
+    } catch (err) {
+      leadSentRef.current = false
+      throw err
+    }
+  }
+
   async function send() {
     const trimmed = input.trim()
     if (!trimmed || sending) return
@@ -87,6 +130,17 @@ export default function ChatWidget() {
     setInput('')
     setChatError(null)
     setSending(true)
+
+    // If the visitor just typed an email straight into chat (the way people
+    // actually respond when asked), capture it — don't rely on the form.
+    const foundEmail = trimmed.match(EMAIL_FIND)?.[0]
+    if (foundEmail && !leadSentRef.current) {
+      void postLead(foundEmail, next)
+        .then(() => setLeadState('sent'))
+        .catch(() => {
+          /* best-effort; the LLM reply still goes through */
+        })
+    }
 
     try {
       const res = await fetch('/api/chat', {
@@ -132,35 +186,11 @@ export default function ChatWidget() {
       setEmailError('That email looks off — mind double-checking?')
       return
     }
-    const trimmedName = name.trim()
     setEmailError(null)
     setLeadState('submitting')
 
-    const transcript = messages
-      .filter(m => m.role === 'user')
-      .slice(-5)
-      .map(m => `• ${m.content}`)
-      .join('\n')
-
     try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          name: trimmedName || 'Chat visitor',
-          email: trimmed,
-          message:
-            transcript ||
-            'Visitor asked the chatbot to have the team follow up (no transcript yet).',
-          service: 'Chatbot',
-          newsletter: false,
-          source: 'chatbot',
-        }),
-      })
-      if (!res.ok) {
-        const data = (await res.json().catch(() => ({}))) as { error?: string }
-        throw new Error(data.error || `Server error (${res.status})`)
-      }
+      await postLead(trimmed, messages)
       setLeadState('sent')
       setMessages(m => [
         ...m,
