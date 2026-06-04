@@ -95,6 +95,11 @@ async function notifyTelegram(lead: Lead): Promise<void> {
       text,
       parse_mode: 'HTML',
       disable_web_page_preview: true,
+      // Tapped in Telegram → OpenClaw forwards `qual:<id>` to Pixel, which runs
+      // `cli.mjs qualify <id>` (create client folder + draft outreach). 64-byte cap.
+      reply_markup: {
+        inline_keyboard: [[{ text: '✅ Qualify', callback_data: `qual:${lead.id}` }]],
+      },
     }),
   })
   if (!res.ok) {
