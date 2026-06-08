@@ -5,8 +5,12 @@ import { ConvexProvider, ConvexReactClient } from 'convex/react'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import App from './App'
 import './index.css'
+import { fireVisitBeacon } from './lib/visitBeacon'
 
 const convexUrl = import.meta.env.VITE_CONVEX_URL as string
+
+// Fire once per session — resolves corporate visitors to companies server-side.
+fireVisitBeacon()
 
 const convex = convexUrl
   ? new ConvexReactClient(convexUrl)
