@@ -17,3 +17,11 @@
   from = "/api/visit"
   to = "/.netlify/functions/visit"
   status = 200
+
+# SPA fallback — serve index.html for all client-side routes so deep links
+# (/services/:slug, /about, /contact) resolve instead of 404ing. MUST stay last
+# so the /api/* function redirects above match first.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
