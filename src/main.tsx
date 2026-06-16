@@ -5,12 +5,14 @@ import { ConvexProvider, ConvexReactClient } from 'convex/react'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import App from './App'
 import './index.css'
-import { fireVisitBeacon } from './lib/visitBeacon'
+// Pre-launch: visitor-tracking beacon disabled (no privacy policy yet). The lib
+// file is kept; re-enable by uncommenting both lines below (HIDE/REVERSIBLE).
+// import { fireVisitBeacon } from './lib/visitBeacon'
 
 const convexUrl = import.meta.env.VITE_CONVEX_URL as string
 
 // Fire once per session — resolves corporate visitors to companies server-side.
-fireVisitBeacon()
+// fireVisitBeacon()
 
 const convex = convexUrl
   ? new ConvexReactClient(convexUrl)

@@ -44,6 +44,11 @@ interface BlogCardPost {
   featuredImageUrl?: string | null
 }
 
+// Pre-launch flag: the fallback demo posts below are hidden until we have real
+// content. When false, the page shows its honest empty-state. Flip to true to
+// re-enable the placeholder posts (HIDE/REVERSIBLE).
+const SHOW_FALLBACK_POSTS = false
+
 const FALLBACK_POSTS: BlogCardPost[] = [
   {
     _id: '1',
@@ -126,7 +131,7 @@ const FALLBACK_POSTS: BlogCardPost[] = [
 ]
 
 export default function Blog() {
-  useSEO('Blog', 'Digital marketing insights from the Pixel Live team — Video, SEO, Ads & Content strategy.')
+  useSEO('Blog', 'Digital marketing insights from the Pixellive team — Video, SEO, Ads & Content strategy.')
   const [activeCategory, setActiveCategory] = useState('All')
 
   const convexPosts = useSafeQuery(api.blog.listPublished)
@@ -138,7 +143,9 @@ export default function Blog() {
         _id: String(p._id),
         readTime: '10 min',
       }))
-    : FALLBACK_POSTS
+    : SHOW_FALLBACK_POSTS
+    ? FALLBACK_POSTS
+    : []
 
   const filtered = allPosts.filter((p) => activeCategory === 'All' || p.category === activeCategory)
   const featured = filtered[0]

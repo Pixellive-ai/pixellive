@@ -30,6 +30,10 @@ const socials = [
   { icon: Youtube, href: '#', label: 'YouTube' },
 ]
 
+// Pre-launch flags: hide placeholder contact details, dead social links, and the
+// unconfirmed Cal.com booking link until real values exist (HIDE/REVERSIBLE).
+const SHOW = { phone: false, address: false, socials: false, calBooking: false }
+
 export default function Contact() {
   useSEO('Contact Us', 'Tell us about your project. Our AI reads every brief and gets back to you with a custom strategy.')
 
@@ -253,10 +257,11 @@ export default function Contact() {
               <GlassCard className="p-6">
                 <p className="text-xs uppercase tracking-widest font-semibold text-[var(--muted)] mb-4">Contact</p>
                 <div className="space-y-3">
-                  <p className="text-sm text-[var(--fg-muted)]">hello@pixellive.agency</p>
-                  <p className="text-sm text-[var(--fg-muted)]">+1 (415) 000-0000</p>
-                  <p className="text-sm text-[var(--fg-muted)]">San Francisco, CA</p>
+                  <p className="text-sm text-[var(--fg-muted)]">hello@pixelliveproduction.com</p>
+                  {SHOW.phone && <p className="text-sm text-[var(--fg-muted)]">+1 (415) 000-0000</p>}
+                  {SHOW.address && <p className="text-sm text-[var(--fg-muted)]">San Francisco, CA</p>}
                 </div>
+                {SHOW.socials && (
                 <div className="flex gap-3 mt-5">
                   {socials.map(({ icon: Icon, href, label }) => (
                     <a
@@ -269,6 +274,7 @@ export default function Contact() {
                     </a>
                   ))}
                 </div>
+                )}
               </GlassCard>
 
               {/* Orbit visual */}
@@ -297,6 +303,7 @@ export default function Contact() {
           </div>
 
           {/* Secondary: book direct (Cal.com) — for people who already know what they want */}
+          {SHOW.calBooking && (
           <BlurFadeIn className="text-center mt-12" delay={0.3}>
             <p className="text-sm text-[var(--fg-muted)]">
               Already know what you need?{' '}
@@ -310,6 +317,7 @@ export default function Contact() {
               </a>
             </p>
           </BlurFadeIn>
+          )}
         </div>
       </section>
     </PageTransition>

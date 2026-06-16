@@ -52,7 +52,7 @@ export default async (req: Request): Promise<Response> => {
     serviceInterest: body.service?.trim() || null,
     message,
     newsletter: !!body.newsletter,
-    source: 'pixellive.netlify.app',
+    source: 'pixelliveproduction.com',
     userAgent: req.headers.get('user-agent') || null,
   }
 

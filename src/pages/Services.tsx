@@ -11,9 +11,10 @@ import { AnimatedBeam } from '@/components/ui/animated-beam'
 import { BorderBeam } from '@/components/ui/border-beam'
 import { useSEO } from '@/lib/seo'
 
-const services = [
+export const services = [
   {
     icon: Bot,
+    slug: 'ai-automation',
     title: 'AI Automation & Lead Generation',
     desc: 'We build and run AI systems that bring you customers — leads found, outreach sent, content posted, results reported. Done-for-you, so you never have to think about it.',
     color: '#00F0FF',
@@ -29,6 +30,7 @@ const services = [
   },
   {
     icon: Sparkles,
+    slug: 'ai-web-development',
     title: 'AI Web Development',
     desc: 'Websites and apps with intelligence built in — conversational chat, AI-powered search, personalization engines, and on-page agents that act on your customers’ behalf.',
     color: '#60A5FA',
@@ -44,6 +46,7 @@ const services = [
   },
   {
     icon: Search,
+    slug: 'seo',
     title: 'Search Engine Optimization',
     desc: 'Sustainable, scalable organic growth through technical excellence and compelling content strategy.',
     color: '#7B61FF',
@@ -59,6 +62,7 @@ const services = [
   },
   {
     icon: Megaphone,
+    slug: 'paid-ads',
     title: 'SEM & Paid Advertising',
     desc: 'High-performance paid campaigns engineered for ROAS. Every dollar works harder.',
     color: '#FF61DC',
@@ -74,6 +78,7 @@ const services = [
   },
   {
     icon: Share2,
+    slug: 'social-media',
     title: 'Social Media Management',
     desc: 'An always-on social presence — we plan, create, post, and engage across your channels, then report what is actually working.',
     color: '#FF8A3D',
@@ -89,6 +94,7 @@ const services = [
   },
   {
     icon: Code2,
+    slug: 'web-app-development',
     title: 'Web & App Development',
     desc: 'Fast, beautiful, conversion-focused websites and apps — built on a modern stack and ready to scale with you.',
     color: '#3DD68C',
@@ -104,6 +110,7 @@ const services = [
   },
   {
     icon: FileText,
+    slug: 'content-planning',
     title: 'Content Planning',
     desc: 'Strategic content ecosystems that nurture audiences, build authority, and drive conversions.',
     color: '#FFB800',
@@ -119,6 +126,7 @@ const services = [
   },
   {
     icon: Video,
+    slug: 'video-production',
     title: 'Video Production',
     desc: 'The creative-quality layer. Cinematographer-led production so your brand never looks like everyone else — from concept to final cut.',
     color: '#A78BFA',
@@ -135,7 +143,7 @@ const services = [
 ]
 
 export default function Services() {
-  useSEO('Services', 'Explore Pixel Live\'s full-service offerings — Video, SEO, Ads, and Content.')
+  useSEO('Services', 'Explore Pixellive\'s full-service offerings — Video, SEO, Ads, and Content.')
 
   return (
     <PageTransition>
@@ -233,17 +241,25 @@ export default function Services() {
                   </div>
                 </GlassCard>
 
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5"
-                  style={{
-                    background: `${svc.color}15`,
-                    border: `1px solid ${svc.color}40`,
-                    color: svc.color,
-                  }}
-                >
-                  Get a proposal <ArrowRight className="w-4 h-4" />
-                </Link>
+                <div className="flex flex-wrap items-center gap-4">
+                  <Link
+                    to={`/services/${svc.slug}`}
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5"
+                    style={{
+                      background: `${svc.color}15`,
+                      border: `1px solid ${svc.color}40`,
+                      color: svc.color,
+                    }}
+                  >
+                    Learn more <ArrowRight className="w-4 h-4" />
+                  </Link>
+                  <Link
+                    to="/contact"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--fg-muted)] hover:text-[var(--fg)] transition-colors"
+                  >
+                    Get a proposal <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
               </BlurFadeIn>
             </div>
           </div>

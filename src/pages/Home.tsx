@@ -13,7 +13,6 @@ import { TextGenerateEffect } from '@/components/ui/text-generate'
 import CodeAscii from '@/components/CodeAscii'
 import { BentoGrid, BentoCell } from '@/components/ui/bento-grid'
 import { SpotlightCard } from '@/components/ui/spotlight-card'
-import { BorderBeam } from '@/components/ui/border-beam'
 import { NumberTicker } from '@/components/ui/number-ticker'
 import { Marquee } from '@/components/ui/marquee'
 import { TiltCard } from '@/components/ui/tilt-card'
@@ -25,6 +24,7 @@ import { useSEO } from '@/lib/seo'
 const services = [
   {
     icon: Bot,
+    slug: 'ai-automation',
     title: 'AI Automation & Lead Generation',
     desc: 'We build and run AI systems that bring you customers — leads, content, and reporting handled end-to-end. Done-for-you.',
     tag: 'AI Ops',
@@ -33,6 +33,7 @@ const services = [
   },
   {
     icon: Sparkles,
+    slug: 'ai-web-development',
     title: 'AI Web Development',
     desc: 'Websites and apps with AI built in — chat, search, personalization, on-page agents.',
     tag: 'AI Web',
@@ -41,6 +42,7 @@ const services = [
   },
   {
     icon: Search,
+    slug: 'seo',
     title: 'SEO',
     desc: 'Dominate organic search with data-driven strategies.',
     tag: 'Search',
@@ -49,6 +51,7 @@ const services = [
   },
   {
     icon: Megaphone,
+    slug: 'paid-ads',
     title: 'SEM & Paid Ads',
     desc: 'High-ROI paid campaigns across Google, Meta & beyond.',
     tag: 'Paid',
@@ -57,6 +60,7 @@ const services = [
   },
   {
     icon: Share2,
+    slug: 'social-media',
     title: 'Social Media',
     desc: 'Always-on content, posting, and engagement across your channels.',
     tag: 'Social',
@@ -65,6 +69,7 @@ const services = [
   },
   {
     icon: Code2,
+    slug: 'web-app-development',
     title: 'Web & App Development',
     desc: 'Fast, conversion-focused websites and apps, built to scale.',
     tag: 'Build',
@@ -73,6 +78,7 @@ const services = [
   },
   {
     icon: FileText,
+    slug: 'content-planning',
     title: 'Content Planning',
     desc: 'Editorial calendars, blog content, and systems that build brand authority.',
     tag: 'Strategy',
@@ -81,6 +87,7 @@ const services = [
   },
   {
     icon: Video,
+    slug: 'video-production',
     title: 'Video Production',
     desc: 'Cinema-grade brand films, reels, and campaign creative.',
     tag: 'Creative',
@@ -123,7 +130,7 @@ const testimonials = [
   {
     name: 'Sarah Chen',
     role: 'CMO, TechCorp',
-    text: 'Pixel Live transformed our digital presence. The video campaign they produced generated 2M views in 30 days.',
+    text: 'Pixellive transformed our digital presence. The video campaign they produced generated 2M views in 30 days.',
     rating: 5,
   },
   {
@@ -135,10 +142,14 @@ const testimonials = [
   {
     name: 'Priya Nair',
     role: 'Growth Lead, Velocity Co',
-    text: 'The paid media ROI we achieved with Pixel Live was 4x what we expected. Truly world-class.',
+    text: 'The paid media ROI we achieved with Pixellive was 4x what we expected. Truly world-class.',
     rating: 5,
   },
 ]
+
+// Pre-launch flags: these sections render placeholder/demo data and are hidden
+// until we have real content. Flip to true to re-enable (HIDE/REVERSIBLE).
+const SHOW = { stats: false, clients: false, portfolio: false, testimonials: false }
 
 export default function Home() {
   useSEO('Home', 'AI-powered digital agency — AI automation & lead generation, SEO, paid ads, social, and web development. Done-for-you.')
@@ -262,8 +273,9 @@ export default function Home() {
                 <BlurFadeIn delay={i * 0.08} className="h-full">
                   <TiltCard intensity={8} className="h-full">
                     <SpotlightCard className="h-full group">
-                      <div
-                        className="relative h-full rounded-2xl p-6 overflow-hidden min-h-[200px] flex flex-col justify-between border transition-colors"
+                      <Link
+                        to={`/services/${svc.slug}`}
+                        className="relative h-full rounded-2xl p-6 overflow-hidden min-h-[200px] flex flex-col justify-between border transition-colors cursor-pointer"
                         style={{
                           background: `linear-gradient(135deg, ${svc.color}10 0%, transparent 60%), var(--glass)`,
                           borderColor: `${svc.color}40`,
@@ -289,7 +301,7 @@ export default function Home() {
                         >
                           {svc.tag}
                         </span>
-                      </div>
+                      </Link>
                     </SpotlightCard>
                   </TiltCard>
                 </BlurFadeIn>
@@ -300,6 +312,7 @@ export default function Home() {
       </section>
 
       {/* Stats */}
+      {SHOW.stats && (
       <section className="py-20 px-6 border-y border-[var(--border-color)] relative overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-neon/30 to-transparent" />
         <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -314,8 +327,10 @@ export default function Home() {
         </div>
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-neon/30 to-transparent" />
       </section>
+      )}
 
       {/* Clients Marquee */}
+      {SHOW.clients && (
       <section className="py-16 overflow-hidden">
         <BlurFadeIn className="text-center mb-8">
           <p className="text-xs uppercase tracking-widest text-[var(--muted)] font-semibold">
@@ -345,8 +360,10 @@ export default function Home() {
           </Marquee>
         </div>
       </section>
+      )}
 
       {/* Featured Work */}
+      {SHOW.portfolio && (
       <section className="py-24 px-6">
         <div className="max-w-6xl mx-auto">
           <BlurFadeIn className="text-center mb-16">
@@ -380,8 +397,10 @@ export default function Home() {
           </StaggerChildren>
         </div>
       </section>
+      )}
 
       {/* Testimonials */}
+      {SHOW.testimonials && (
       <section className="py-24 px-6 bg-[var(--bg-secondary)]">
         <div className="max-w-6xl mx-auto">
           <BlurFadeIn className="text-center mb-16">
@@ -411,6 +430,7 @@ export default function Home() {
           </StaggerChildren>
         </div>
       </section>
+      )}
 
       {/* CTA Banner */}
       <AuroraBackground>
@@ -422,7 +442,7 @@ export default function Home() {
               <span className="text-gradient-neon">extraordinary.</span>
             </h2>
             <p className="text-[var(--fg-muted)] max-w-lg mx-auto mb-10">
-              Book a free strategy call and discover how Pixel Live can 10x your digital presence.
+              Book a free strategy call and discover how Pixellive can 10x your digital presence.
             </p>
             <Link
               to="/contact"

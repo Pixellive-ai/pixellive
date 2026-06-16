@@ -88,7 +88,7 @@ export default function BlogPost() {
   )
 
   const fmtDate = (ts: number | undefined) =>
-    ts ? new Date(ts).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'March 2024'
+    ts ? new Date(ts).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : ''
 
   return (
     <PageTransition>
@@ -154,12 +154,12 @@ export default function BlogPost() {
                 )}
 
                 <h1 className="text-4xl md:text-5xl font-black leading-tight mb-6">
-                  {post?.title ?? `Deep Dive: Digital Marketing Insights #${id}`}
+                  {post?.title ?? 'Coming soon'}
                 </h1>
 
                 <div className="flex flex-wrap items-center gap-4 mb-10 pb-8 border-b border-[var(--border-color)]">
                   <span className="flex items-center gap-1.5 text-sm text-[var(--fg-muted)]">
-                    <User className="w-4 h-4" /> {post?.author ?? 'Pixel Live Team'}
+                    <User className="w-4 h-4" /> {post?.author ?? 'Pixellive Team'}
                   </span>
                   <span className="flex items-center gap-1.5 text-sm text-[var(--fg-muted)]">
                     <Calendar className="w-4 h-4" /> {fmtDate(post?.publishedAt)}
@@ -190,8 +190,11 @@ export default function BlogPost() {
                           </p>
                         </GlassCard>
                       )}
+                      {/* Pre-launch: neutral placeholder shown instead of fabricated article
+                          body until real content is published (HIDE/REVERSIBLE). The
+                          original demo body is preserved below, commented out, to re-enable.
                       <p>
-                        The digital landscape is evolving faster than ever. Brands that thrive are those that combine creative excellence with data-driven execution — a philosophy at the core of everything we do at Pixel Live.
+                        The digital landscape is evolving faster than ever. Brands that thrive are those that combine creative excellence with data-driven execution — a philosophy at the core of everything we do at Pixellive.
                       </p>
                       <h2 className="text-2xl font-black text-[var(--fg)] mt-8 mb-4">The Framework</h2>
                       <p>
@@ -201,6 +204,8 @@ export default function BlogPost() {
                       <p>
                         Our data-driven approach consistently delivers above-benchmark results across all channels — from organic search to paid media to video engagement metrics.
                       </p>
+                      */}
+                      <p>This article is coming soon. Check back shortly.</p>
                     </>
                   )}
                 </div>

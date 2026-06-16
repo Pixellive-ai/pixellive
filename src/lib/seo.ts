@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 
 export function useSEO(title: string, description?: string, keywords?: string[], schema?: string) {
   useEffect(() => {
-    document.title = `${title} | Pixel Live Production`
+    document.title = `${title} | Pixellive Production`
     
     // Description
     if (description) {

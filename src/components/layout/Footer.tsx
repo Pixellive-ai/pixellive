@@ -5,7 +5,7 @@ import { useTheme } from '@/components/providers/ThemeProvider'
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/services', label: 'Services' },
-  { href: '/blog', label: 'Blog' },
+  // { href: '/blog', label: 'Blog' }, // hidden pre-launch — re-enable when blog has posts
   { href: '/about', label: 'About' },
 ]
 
@@ -15,6 +15,10 @@ const socials = [
   { icon: Instagram, href: '#', label: 'Instagram' },
   { icon: Youtube, href: '#', label: 'YouTube' },
 ]
+
+// Pre-launch flag: hide dead social links (no real handles yet). Flip to true
+// once real social profiles exist (HIDE/REVERSIBLE).
+const SHOW_SOCIALS = false
 
 export function Footer() {
   const { theme } = useTheme()
@@ -56,6 +60,7 @@ export function Footer() {
 
           <div>
             <p className="text-xs uppercase tracking-widest text-[var(--muted)] mb-4 font-semibold">Connect</p>
+            {SHOW_SOCIALS && (
             <div className="flex gap-3 mb-6">
               {socials.map(({ icon: Icon, href, label }) => (
                 <a
@@ -68,7 +73,8 @@ export function Footer() {
                 </a>
               ))}
             </div>
-            <p className="text-xs text-[var(--muted)]">hello@pixellive.agency</p>
+            )}
+            <p className="text-xs text-[var(--muted)]">hello@pixelliveproduction.com</p>
           </div>
         </div>
 

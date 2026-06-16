@@ -26,7 +26,7 @@ export default function AdminDashboard() {
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-black">Dashboard</h1>
-          <p className="text-sm text-[var(--fg-muted)] mt-1">Overview of your Pixel Live content.</p>
+          <p className="text-sm text-[var(--fg-muted)] mt-1">Overview of your Pixellive content.</p>
         </div>
         <Link
           to="/admin/blogs/new"

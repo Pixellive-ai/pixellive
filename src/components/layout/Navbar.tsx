@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils'
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/services', label: 'Services' },
-  { href: '/blog', label: 'Blog' },
+  // { href: '/blog', label: 'Blog' }, // hidden pre-launch — re-enable when blog has posts
   { href: '/about', label: 'About' },
 ]
 
