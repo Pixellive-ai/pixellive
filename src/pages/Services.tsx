@@ -266,7 +266,9 @@ export default function Services() {
         </section>
       ))}
 
-      {/* Tools BentoGrid */}
+      {/* Tools BentoGrid — HIDDEN pre-launch until we confirm our real gear/tools.
+          Reversible: change `false` → `true` to bring it back. */}
+      {false && (
       <section className="py-24 px-6 bg-[var(--bg-secondary)]">
         <div className="max-w-6xl mx-auto">
           <BlurFadeIn className="text-center mb-12">
@@ -299,6 +301,7 @@ export default function Services() {
           </BentoGrid>
         </div>
       </section>
+      )}
     </PageTransition>
   )
 }
