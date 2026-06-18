@@ -6,7 +6,11 @@ import { Footer } from '@/components/layout/Footer'
 import { Toaster } from 'sonner'
 import ChatWidget from '@/components/ChatWidget'
 
-const Home = lazy(() => import('@/pages/Home'))
+// Home is the landing route — import it eagerly (not lazy) so the hero paints as
+// soon as the main bundle executes, instead of waiting on a second chunk fetch +
+// the PageLoader spinner. That extra round-trip was inflating LCP. All other
+// routes stay lazy so they don't bloat the critical bundle.
+import Home from '@/pages/Home'
 const About = lazy(() => import('@/pages/About'))
 const Services = lazy(() => import('@/pages/Services'))
 const ServiceDetail = lazy(() => import('@/pages/ServiceDetail'))

@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, lazy, Suspense } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import {
@@ -6,9 +6,11 @@ import {
   ChevronDown, ArrowRight, Star, Play,
 } from 'lucide-react'
 import { PageTransition } from '@/components/ui/page-transition'
-import { ParticleField } from '@/components/ui/particle-field'
-import { AuroraBackground } from '@/components/ui/aurora-bg'
-import { BackgroundBeams } from '@/components/ui/bg-beams'
+// Decorative hero canvases — lazy so they drop out of the critical render path.
+// The hero headline (the LCP element) paints first; these stream in a beat later.
+const ParticleField = lazy(() => import('@/components/ui/particle-field').then((m) => ({ default: m.ParticleField })))
+const AuroraBackground = lazy(() => import('@/components/ui/aurora-bg').then((m) => ({ default: m.AuroraBackground })))
+const BackgroundBeams = lazy(() => import('@/components/ui/bg-beams').then((m) => ({ default: m.BackgroundBeams })))
 import { TextGenerateEffect } from '@/components/ui/text-generate'
 import CodeAscii from '@/components/CodeAscii'
 import { BentoGrid, BentoCell } from '@/components/ui/bento-grid'
@@ -168,15 +170,15 @@ export default function Home() {
         <motion.div className="absolute inset-0" style={{ y: layer1Y }}>
           <div className="absolute inset-0 bg-[var(--bg)]" />
           <div className="bg-grid-pattern absolute inset-0 opacity-40" />
-          <ParticleField />
+          <Suspense fallback={null}><ParticleField /></Suspense>
         </motion.div>
 
         <motion.div className="absolute inset-0 pointer-events-none" style={{ y: layer2Y }}>
-          <AuroraBackground className="absolute inset-0" />
+          <Suspense fallback={null}><AuroraBackground className="absolute inset-0" /></Suspense>
         </motion.div>
 
         <motion.div className="absolute inset-0 pointer-events-none" style={{ y: layer3Y }}>
-          <BackgroundBeams />
+          <Suspense fallback={null}><BackgroundBeams /></Suspense>
         </motion.div>
 
         <motion.div
@@ -194,11 +196,11 @@ export default function Home() {
           </motion.div>
 
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-[0.9] tracking-tight mb-6">
-            <TextGenerateEffect text="We Build Worlds." className="block text-[var(--fg)]" />
+            <TextGenerateEffect text="We Build Worlds." className="block text-[var(--fg)]" instant />
             <TextGenerateEffect
               text="You Conquer Them."
               className="block text-gradient-neon"
-              delay={0.8}
+              instant
             />
           </h1>
 

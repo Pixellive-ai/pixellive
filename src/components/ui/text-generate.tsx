@@ -7,9 +7,16 @@ interface TextGenerateEffectProps {
   text: string
   className?: string
   delay?: number
+  /**
+   * Render the full text immediately (no per-word opacity fade). Use on the hero
+   * headline so it counts as painted right away — an element animating up from
+   * opacity:0 is NOT counted by the browser as the Largest Contentful Paint until
+   * it becomes visible, which was pushing LCP out by the animation duration.
+   */
+  instant?: boolean
 }
 
-export function TextGenerateEffect({ text, className, delay = 0 }: TextGenerateEffectProps) {
+export function TextGenerateEffect({ text, className, delay = 0, instant = false }: TextGenerateEffectProps) {
   const reduced = useReducedMotion()
   const words = text.split(' ')
   const [show, setShow] = useState(false)
@@ -19,7 +26,7 @@ export function TextGenerateEffect({ text, className, delay = 0 }: TextGenerateE
     return () => clearTimeout(t)
   }, [delay])
 
-  if (reduced) {
+  if (reduced || instant) {
     return <span className={className}>{text}</span>
   }
 
