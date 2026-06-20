@@ -187,12 +187,12 @@ export default function Contact() {
                         Service Interest
                       </label>
                       <select
-                        className={inputClass}
+                        className={`${inputClass} [color-scheme:dark]`}
                         value={form.service}
                         onChange={e => setForm(f => ({ ...f, service: e.target.value }))}
                       >
-                        <option value="">Select a service…</option>
-                        {serviceOptions.map(s => <option key={s} value={s}>{s}</option>)}
+                        <option value="" className="bg-[#0b0b12] text-white">Select a service…</option>
+                        {serviceOptions.map(s => <option key={s} value={s} className="bg-[#0b0b12] text-white">{s}</option>)}
                       </select>
                     </div>
 
