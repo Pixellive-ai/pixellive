@@ -128,16 +128,3 @@
     scrollbar-width: none;
   }
 }
-
-/* Orbit keyframes for the "Our Services" widget (orbiting-circles.tsx applies these
-   via inline style with a per-ring --radius + duration). Defined here in global CSS
-   because the component uses inline `animation: orbit ...` rather than the Tailwind
-   `animate-orbit` class, so Tailwind's JIT tree-shakes the config keyframes out. */
-@keyframes orbit {
-  0%   { transform: rotate(0deg)   translateX(var(--radius)) rotate(0deg); }
-  100% { transform: rotate(360deg) translateX(var(--radius)) rotate(-360deg); }
-}
-@keyframes orbit-reverse {
-  0%   { transform: rotate(360deg) translateX(var(--radius)) rotate(-360deg); }
-  100% { transform: rotate(0deg)   translateX(var(--radius)) rotate(0deg); }
-}

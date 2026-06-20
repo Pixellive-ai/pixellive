@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Send, Video, Search, Megaphone, Twitter, Linkedin, Instagram, Youtube, CheckCircle2 } from 'lucide-react'
+import { Send, Video, Twitter, Linkedin, Instagram, Youtube, CheckCircle2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { PageTransition } from '@/components/ui/page-transition'
 import { BackgroundBeams } from '@/components/ui/bg-beams'
 import { AuroraBackground } from '@/components/ui/aurora-bg'
 import { GlassCard } from '@/components/ui/glass-card'
 import { BlurFadeIn } from '@/components/ui/blur-fade'
-import { OrbitingCircles, OrbitRing } from '@/components/ui/orbiting-circles'
 import { useSEO } from '@/lib/seo'
 
 const serviceOptions = [
@@ -277,28 +276,6 @@ export default function Contact() {
                 )}
               </GlassCard>
 
-              {/* Orbit visual */}
-              <GlassCard className="p-6">
-                <p className="text-xs uppercase tracking-widest font-semibold text-[var(--muted)] mb-4">Our Services</p>
-                <div className="relative h-48 flex items-center justify-center">
-                  <div className="relative w-36 h-36">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-12 h-12 rounded-xl bg-neon/10 border border-neon/40 flex items-center justify-center text-xs font-bold text-neon">
-                        PLP
-                      </div>
-                    </div>
-                    <OrbitRing radius={48}>
-                      <OrbitingCircles radius={48} duration={5} icon={<Video className="w-3 h-3" />} />
-                    </OrbitRing>
-                    <OrbitRing radius={70}>
-                      <OrbitingCircles radius={70} duration={8} reverse icon={<Search className="w-3 h-3" />} />
-                    </OrbitRing>
-                    <OrbitRing radius={92}>
-                      <OrbitingCircles radius={92} duration={11} icon={<Megaphone className="w-3 h-3" />} />
-                    </OrbitRing>
-                  </div>
-                </div>
-              </GlassCard>
             </BlurFadeIn>
           </div>
 
